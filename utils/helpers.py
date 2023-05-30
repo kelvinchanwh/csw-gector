@@ -189,6 +189,10 @@ def get_weights_name(transformer_name, lowercase):
         return 'bert-base-uncased'
     if transformer_name == 'bert' and not lowercase:
         return 'bert-base-cased'
+    if transformer_name == 'mbert' and lowercase:
+        return 'bert-base-multilingual-uncased'
+    if transformer_name == 'mbert' and not lowercase:
+        return 'bert-base-multilingual-cased'
     if transformer_name == 'bert-large' and not lowercase:
         return 'bert-large-cased'
     if transformer_name == 'distilbert':
@@ -199,12 +203,30 @@ def get_weights_name(transformer_name, lowercase):
         if not lowercase:
             print('Warning! This model was trained only on uncased sentences.')
         return 'albert-base-v1'
+    if transformer_name == 'albert-v2':
+        if not lowercase:
+            print('Warning! This model was trained only on uncased sentences.')
+        return 'albert-base-v2'
     if lowercase:
         print('Warning! This model was trained only on cased sentences.')
     if transformer_name == 'roberta':
         return 'roberta-base'
     if transformer_name == 'roberta-large':
         return 'roberta-large'
+    if transformer_name == 'xlm-roberta':
+        return 'xlm-roberta-base'
+    if transformer_name == 'xlm-roberta-large':
+        return 'xlm-roberta-large'
+    if transformer_name == 'mdeberta-v3-base':
+        return 'microsoft/mdeberta-v3-base'
+    if transformer_name == 'deberta-v3-base':
+        return 'microsoft/deberta-v3-base' 
+    if transformer_name == 'deberta-base':
+        return 'microsoft/deberta-base'
+    if transformer_name == 'deberta-large':
+        return 'microsoft/deberta-large'
+    if transformer_name == 'electra-base':
+        return 'google/electra-base-discriminator'
     if transformer_name == 'gpt2':
         return 'gpt2'
     if transformer_name == 'transformerxl':
@@ -213,6 +235,10 @@ def get_weights_name(transformer_name, lowercase):
         return 'xlnet-base-cased'
     if transformer_name == 'xlnet-large':
         return 'xlnet-large-cased'
+    if transformer_name == 'bart':
+        return 'facebook/bart-base'
+    if transformer_name == 'bart-large':
+        return 'facebook/bart-large'
 
 
 def remove_double_tokens(sent):

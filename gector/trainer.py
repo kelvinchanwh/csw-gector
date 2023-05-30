@@ -543,6 +543,7 @@ class Trainer(TrainerBase):
             metrics["best_validation_" + key] = value
 
         for epoch in range(epoch_counter, self._num_epochs):
+            print("Training epoch %d"%int(epoch))
             if epoch == self.cold_step_count and epoch != 0:
                 for param_group in self.optimizer.param_groups:
                     param_group['lr'] = base_lr
@@ -563,6 +564,7 @@ class Trainer(TrainerBase):
             # clear cache before validation
             torch.cuda.empty_cache()
             if self._validation_data is not None:
+                print("Validation epoch %d"%int(epoch))
                 with torch.no_grad():
                     # We have a validation set, so compute all the metrics on it.
                     val_loss, num_batches = self._validation_loss()

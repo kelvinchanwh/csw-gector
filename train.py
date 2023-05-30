@@ -16,12 +16,12 @@ from gector.tokenizer_indexer import PretrainedBertIndexer
 from utils.helpers import get_weights_name
 
 
-def fix_seed():
-    torch.manual_seed(1)
+def fix_seed(starting_seed):
+    torch.manual_seed(starting_seed)
     torch.backends.cudnn.enabled = False
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
-    seed(43)
+    seed(starting_seed*43)
 
 
 def get_token_indexers(model_name, max_pieces_per_token=5, lowercase_tokens=True, special_tokens_fix=0):
@@ -87,7 +87,7 @@ def get_model(model_name, vocab, tune_bert=False,
 
 
 def main(args):
-    fix_seed()
+    fix_seed(args.seed)
     if not os.path.exists(args.model_dir):
         os.mkdir(args.model_dir)
 
@@ -207,6 +207,10 @@ if __name__ == '__main__':
                         type=int,
                         help='The size of the batch.',
                         default=32)
+    parser.add_argument('--seed',
+                        type=int,
+                        help='Seed to start',
+                        default=2)
     parser.add_argument('--max_len',
                         type=int,
                         help='The max sentence length'
@@ -298,8 +302,9 @@ if __name__ == '__main__':
                         help='The name of the pretrain weights in pretrain_folder param.',
                         default='')
     parser.add_argument('--transformer_model',
-                        choices=['bert', 'distilbert', 'gpt2', 'roberta', 'transformerxl', 'xlnet', 'albert',
-                                 'bert-large', 'roberta-large', 'xlnet-large'],
+                        choices=['bert', 'distilbert', 'gpt2', 'roberta', 'transformerxl', 'xlnet', 'albert', 'albert-v2',
+                                 'bert-large', 'roberta-large', 'xlnet-large', 'xlm-roberta', 'xlm-roberta-large', 
+                                 'mdeberta-v3-base', "deberta-base", "deberta-v3-base", "electra-base", 'mbert'],
                         help='Name of the transformer model.',
                         default='roberta')
     parser.add_argument('--special_tokens_fix',

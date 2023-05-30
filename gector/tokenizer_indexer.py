@@ -139,8 +139,19 @@ class PretrainedBertIndexer(TokenizerIndexer):
 
         model_name = copy.deepcopy(pretrained_model)
 
+        if model_name == "microsoft/deberta-base":
+            model_name = "roberta-base"
+        if model_name == "microsoft/deberta-large":
+            model_name = "roberta-large"
+        if model_name == "microsoft/deberta-xlarge":
+            model_name = "roberta-xlarge"
+
+        
+        print ("PRETRAINED_MODEL: %s"%pretrained_model)
+        print ("TOKENIZER_NAME: %s"%model_name)
+
         model_tokenizer = AutoTokenizer.from_pretrained(
-            model_name, do_lower_case=do_lowercase, do_basic_tokenize=False, use_fast=True)
+            model_name, do_lower_case=bool(do_lowercase), do_basic_tokenize=False, use_fast=True)
 
         # to adjust all tokenizers
         if hasattr(model_tokenizer, 'encoder'):

@@ -1,8 +1,6 @@
 # Grammatical Error Correction for Code-Switched Sentences by Learners of English
 
-This repository provides code for training and testing models for grammatical error correction on code-switching text. It is based on and forked from the GECTOR repository (https://github.com/grammarly/gector).
-
-It is mainly based on `AllenNLP` and `transformers`.
+This repository provides code for training and testing models for grammatical error correction on code-switching text. It is based on and forked from the GECTOR repository (https://github.com/grammarly/gector). Main contributions to the code can be found in the `utils` folder except for `utils/helpers.py` and `utils/preprocess_data.py`. The latter two files and the `train.py` and `predict.py` files are modified versions of the files in the GECTOR repository to adapt the code for code-switching. 
 
 ## Installation
 The following command installs all necessary packages:
@@ -31,12 +29,12 @@ python utils/substitute_gcm.py INPUT_INV_M2_FILE OUTPUT_CS_INCORR_FILE OUTPUT_CS
 ```
 
 Possible selection methods include:
-- `random-token`: randomly select tokens from the sentence
 - `frac-token`: randomly select tokens from the sentence based on a reference corpus distribution
 - `contfrac-token`: randomly select a string of continuous tokens to match the ratio of code-switched text
 - `random-phrase`: randomly select phrases from the sentence
 - `frac-phrase`: select the phrase that has a length closest to the reference corpus distribution
 - `intersect-phrase`: select phrases which intersect with the least number of edit spans
+- `noun-token`: randomly selects a single token with a NOUN or PROPN POS tag based on SpaCy
 
 
 ## Train model

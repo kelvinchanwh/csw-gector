@@ -9,6 +9,7 @@ import multiprocessing
 import platform
 import spf_std_mean, spf_sampling
 import frac_std_mean, frac_sampling
+import spacy
 
 def divide_chunks(l, n):
 	# looping till length l
@@ -158,6 +159,22 @@ def sub_cs(sentence, parser, translator, edits=None, reference = None, src_lang=
 				tokens_to_translate = [" ".join(sentence[start[0]:end[0]])]
 			except Exception:
 				return (sentence, [False]*len(sentence)) 
+		elif select == "noun-token":
+			doc = parser(" ".join(sentence))
+			noun_list = list()
+			for i, token in enumerate(doc):
+				if (token.pos_ == "NOUN") or (token.pos_ == "PROPN"):
+					noun_list.append(i)
+
+			try:			
+				start = random.sample(noun_list, k=1)
+				end = [i + 1 for i in start]
+				tokens_to_translate = [sentence[i] for i in start]
+			except:
+				# List of nouns might be empty
+				# Return original sentence
+				return (sentence, [False]*len(sentence))
+			
 		else:
 			print ("M2 edits much be provided for intersect selection method. Reference corpus must be provided for spf and frac method")
 			i = list(range(len(sentence)))
@@ -258,6 +275,8 @@ def main(args):
 			# download and load the Benepar model
 			# benepar.download('benepar_en3')
 			parser = benepar.Parser('benepar_en3')
+			if selection == "noun-token":
+				parser = spacy.load("en_core_web_sm")
 
 			# create a translator object
 			translator = Translator()

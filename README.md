@@ -15,45 +15,63 @@ pip install errant
 ```
 
 ## Datasets
-All the public GEC datasets used in the paper can be downloaded from [here](https://www.cl.cam.ac.uk/research/nl/bea2019st/#data).<br>
-Synthetically created datasets can be generated/downloaded [here](https://github.com/awasthiabhijeet/PIE/tree/master/errorify).<br>
-To train the model data has to be preprocessed and converted to special format with the command:
-```.bash
-python utils/preprocess_data.py -s SOURCE -t TARGET -o OUTPUT_FILE
-```
+Our experiment used datasets based on the following datasets:
+- All the public GEC datasets used in the paper can be downloaded from [here](https://www.cl.cam.ac.uk/research/nl/bea2019st/#data).
+- Synthetically created datasets can be generated/downloaded [here](https://github.com/awasthiabhijeet/PIE/tree/master/errorify).
 
-## Data Augmentation
+Once the above datasets are downloaded, the following code can be used to generate a dataset similar to that used in the paper.
+
+## Training
+### Training Data Augmentation
 To perform data augmentation, simply run:
 ```.bash
-python utils/substitute_gcm.py INPUT_INV_M2_FILE OUTPUT_CS_INCORR_FILE OUTPUT_CS_CORR_FILE SRC_LANG TGT_LANG SELECTION_METHOD
+python utils/substitute_gcm.py INPUT_INV_M2_FILE OUTPUT_CS_INCORR_PATH OUTPUT_CS_CORR_PATH SRC_LANG TGT_LANG SELECTION_METHOD
 ```
 
-Possible selection methods include:
-- `frac-token`: randomly select tokens from the sentence based on a reference corpus distribution
-- `contfrac-token`: randomly select a string of continuous tokens to match the ratio of code-switched text
-- `random-phrase`: randomly select phrases from the sentence
-- `frac-phrase`: select the phrase that has a length closest to the reference corpus distribution
-- `intersect-phrase`: select phrases which intersect with the least number of edit spans
-- `noun-token`: randomly selects a single token with a NOUN or PROPN POS tag based on SpaCy
+Arguments:
+- `INPUT_INV_M2_FILE`: Inversed M2 file generated using ERRANT. This M2 file should indicate the edits required to generate a **incorrect** sentence from a **correct** sentence. The file can be generated using `errant_parallel -orig <correct_file> -cor <incorrect_file> -out <out_m2>`.
+- `OUTPUT_CS_INCORR_PATH`: Output path for incorrect (errornous) CSW parallel text
+- `OUTPUT_CS_CORR_PATH`: Output path for correct (error-free) CSW parallel text
+- `SRC_LANG`: Source language used by the input M2 file. Language should be denoted using [ISO639-1](https://en.wikipedia.org/wiki/ISO_639) language codes for [supported languages](https://developers.google.com/translate/v2/using_rest#language-params)
+- `TGT_LANG`: Target language for CSW component. Language should be denoted using [ISO639-1](https://en.wikipedia.org/wiki/ISO_639).
+- `SELECTION_METHOD`: Method used to select component to translate for CSW. Possible selection methods include:
+    - `ratio-token`: randomly select tokens from the sentence based on a reference corpus distribution
+    - `cont-token`: randomly select a string of continuous tokens to match the ratio of code-switched text
+    - `rand-phrase`: randomly select phrases from the sentence
+    - `ratio-phrase`: select the phrase that has a length closest to the reference corpus distribution
+    - `overlap-phrase`: select phrases which intersect with the least number of edit spans
+    - `noun-token`: randomly selects a single token with a NOUN or PROPN POS tag based on SpaCy
 
 
-## Train model
+### Train model
+Before training the model, the data has to be preprocessed and converted to special format with the command:
+```.bash
+python utils/preprocess_data.py -s SOURCE_FILE -t TARGET_FILE -o OUTPUT_FILE
+```
+
+
 To train the model, simply run:
 ```.bash
-python train.py --train_set TRAIN_SET --dev_set DEV_SET \
-                --model_dir MODEL_DIR
+python train.py --train_set TRAIN_SET_PATH --dev_set DEV_SET_PATH \
+                --model_dir MODEL_DIR_PATH
 ```
-There are a lot of parameters to specify among them:
+There are a number of parameters that can be specified. Among them:
 - `cold_steps_count` the number of epochs where we train only last linear layer
 - `transformer_model {bert,distilbert,gpt2,roberta,transformerxl,xlnet,albert}` model encoder
 - `tn_prob` probability of getting sentences with no errors; helps to balance precision/recall
 - `pieces_per_token` maximum number of subwords per token; helps not to get CUDA out of memory
 
-## Training parameters
-All parameters that we use for training and evaluating is exactly the same as GECTOR which can be found [here](https://github.com/grammarly/gector/blob/master/docs/training_parameters.md). 
-<br>
+### Training parameters
+All parameters that used for training and evaluating is exactly the same as GECTOR which can be found [here](https://github.com/grammarly/gector/blob/master/docs/training_parameters.md). 
 
-## Model inference
+## Evaluation
+### CSW Lang-8 Dataset
+*TODO: Add method to generate CSW Lang-8 dataset for ZH, KO, JA*
+
+### Human Reannotated Dataset
+*TODO: Add method to generate human reannotated dataset for ZH, KO*
+
+### Model inference
 To run your model on the input file use the following command:
 ```.bash
 python predict.py --model_path MODEL_PATH [MODEL_PATH ...] \
@@ -65,4 +83,9 @@ Among parameters:
 - `additional_confidence` - confidence bias (as in the paper)
 - `special_tokens_fix` to reproduce some reported results of pretrained models
 
-For evaluation use [ERRANT](https://github.com/chrisjbryant/errant).
+### Model evaluation
+For evaluation, we use [ERRANT](https://github.com/chrisjbryant/errant). 
+
+```.bash
+errant_compare -hyp <hyp_m2> -ref <ref_m2> 
+```

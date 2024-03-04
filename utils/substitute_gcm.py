@@ -144,12 +144,12 @@ def sub_cs(sentence, parser, translator, edits=None, reference = None, src_lang=
 			start = random.sample(i, k=random.randint(0, len(sentence)))
 			end = [i + 1 for i in start]
 			tokens_to_translate = [sentence[i] for i in start]
-		elif select == "frac-token" and reference is not None:
+		elif select == "ratio-token" and reference is not None:
 			i = list(range(len(sentence)))
 			start = random.sample(i, int(reference * len(sentence)))
 			end = [i + 1 for i in start]
 			tokens_to_translate = [sentence[i] for i in start]
-		elif select == "contfrac-token" and reference is not None:
+		elif select == "cont-token" and reference is not None:
 			try:
 				frac_len = int(reference * len(sentence))
 				frac_len = 1 if frac_len == 0 else frac_len
@@ -215,13 +215,13 @@ def sub_cs(sentence, parser, translator, edits=None, reference = None, src_lang=
 					phrases.append((' '.join(phrase), leaf_start, leaf_end))
 
 		if len(phrases)>0:
-			if select == 'random-phrase':
+			if select == 'rand-phrase':
 				# randomly select a phrase to translate
 				phrase_to_translate, start, end = random.choice(phrases)
-			elif select == 'intersect-phrase' and (edits is not None):
+			elif select == 'overlap-phrase' and (edits is not None):
 				edit_spans = [(edit[0][0], edit[0][1]) for edit in edits if edit[0][0]!=-1]
 				phrase_to_translate, start, end = select_least_intersect(phrases, edit_spans, len(sentence))
-			elif select == 'frac-phrase' and (reference is not None):
+			elif select == 'ratio-phrase' and (reference is not None):
 				cs_ratio = len(sentence) * reference
 				phrase_to_translate, start, end = min(phrases, key = lambda phrase: abs(phrase[2]-phrase[1]-cs_ratio))
 
@@ -292,11 +292,11 @@ def main(args):
 						cs_list = []
 						current_words = []
 						current_list = []
-						select = "random-phrase" if "phrase" in selection else "random-token"
+						select = "rand-phrase" if "phrase" in selection else "random-token"
 						for token in sentence["corr"]:
 							current_words.append(token)
 							if token == ".":
-								# Selection method will default to random-phrase to avoid needing to pass in m2
+								# Selection method will default to rand-phrase to avoid needing to pass in m2
 								current_words, current_list = sub_cs(current_words, parser, translator, src_lang=src_lang, tgt_lang=tgt_lang, select = select)
 								cs_words += current_words
 								cs_list += current_list

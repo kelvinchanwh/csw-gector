@@ -66,7 +66,18 @@ All parameters that used for training and evaluating is exactly the same as GECT
 
 ## Evaluation
 ### CSW Lang-8 Dataset
-*TODO: Add method to generate CSW Lang-8 dataset for ZH, KO, JA*
+To generate the CSW Lang-8 dataset (used as our test dataset) from the Lang-8 dataset, we can use the `filter_cs.py` script to filter out sentences containing CSW text.
+```.bash
+python data_gen/filter_cs.py <lang8_input_path.dat> -out <json_output_path.json>
+```
+
+We can then sort the sentences based on CSW language using `sort_lang.py`. The json files can then be converted to ERRANT style m2 files using `json_to_m2.py`.
+
+```.bash
+mkdir l1s_cor
+python data_gen/sort_lang.py <json_output_path.json>
+python data_gen/json_to_m2.py l1s_cor/<language.json>
+```
 
 ### Human Reannotated Dataset
 *TODO: Add method to generate human reannotated dataset for ZH, KO*

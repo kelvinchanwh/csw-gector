@@ -74,9 +74,10 @@ python data_gen/filter_cs.py <lang8_input_path.dat> -out <json_output_path.json>
 We can then sort the sentences based on CSW language using `sort_lang.py`. The json files can then be converted to ERRANT style m2 files using `json_to_m2.py`.
 
 ```.bash
+cd data_gen
 mkdir l1s_cor
-python data_gen/sort_lang.py <json_output_path.json>
-python data_gen/json_to_m2.py l1s_cor/<language.json>
+python sort_lang.py <json_output_path.json>
+python json_to_m2.py l1s_cor/<language.json>
 ```
 
 ### Human Reannotated Dataset
@@ -100,3 +101,8 @@ For evaluation, we use [ERRANT](https://github.com/chrisjbryant/errant).
 ```.bash
 errant_compare -hyp <hyp_m2> -ref <ref_m2> 
 ```
+
+## License
+
+Similar to the original Lang-8 corpus, the CSW Lang-8 Dataset is distributed for research and
+educational purposes only. The code for GECTOR is distributed under Apache 2.0 license.

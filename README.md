@@ -81,7 +81,24 @@ python json_to_m2.py l1s_cor/<language.json>
 ```
 
 ### Human Reannotated Dataset
-*TODO: Add method to generate human reannotated dataset for ZH, KO*
+To generate the human reannotated dataset from the CSW Lang-8 dataset, we need to install ERRANT:
+
+```.bash
+python3 -m venv errant_env
+source errant_env/bin/activate
+pip install -U pip setuptools wheel
+pip install errant
+python3 -m spacy download en_core_web_sm
+```
+
+We can then run the `create_human.py` script to generate the human reannotated dataset.
+```.bash
+cd data_gen
+python create_human.py l1s_cor/<language.json> <language>.csw.test.id.m2 <output.m2>
+```
+
+The output of the `create_human.py` script is the m2 file used for human re-annotated dataset evaluation. 
+
 
 ### Model inference
 To run your model on the input file use the following command:

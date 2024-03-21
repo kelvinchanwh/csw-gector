@@ -23,7 +23,7 @@ def main():
             # Get the L1
             author_l1 = sent_dict["author_l1"]
             # Loop through sents
-            for sent in sent_dict["sents"]:
+            for id, sent in enumerate(sent_dict["sents"]):
                 total += 1
                 # Get the languages of the text
                 l1 = sent["orig_langs"]["Lang1"]
@@ -39,6 +39,7 @@ def main():
                 # Create a formatted copy for output
                 out_dict = sent_dict.copy()
                 for k, v in sent.items(): out_dict[k] = v
+                out_dict["journal_id"] = str(f"{out_dict['journal_id']}-{id}")
                 out_dict.pop("sents")
                 # Put the language in the l1_dict if it's not there
                 if not_en in l1_dict: l1_dict[not_en].append(out_dict)

@@ -87,7 +87,7 @@ To generate the human reannotated dataset from the CSW Lang-8 dataset, we need t
 python3 -m venv errant_env
 source errant_env/bin/activate
 pip install -U pip setuptools wheel
-pip install errant
+pip install errant==2.3.3
 python3 -m spacy download en_core_web_sm
 ```
 

@@ -120,5 +120,4 @@ errant_compare -hyp <hyp_m2> -ref <ref_m2>
 ```
 
 ## License
-
-Similar to the original Lang-8 corpus, the CSW Lang-8 Dataset is distributed for research and educational purposes only. The code for GECTOR is distributed under Apache 2.0 license. All code generated from this project is is distributed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) license.
+The code for GECTOR is distributed under Apache 2.0 license. All code generated from this project (including but not limited to the code used to perform data augmentation, generate CSW Lang-8 Dataset, and generate Human Reannotated Dataset) is is distributed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) license.
